@@ -12,15 +12,20 @@ def read_data(filename, selector_rows: list, selector_values: list):
         filename = filename + '.csv'
 
     try:
-        file_data = pd.read_csv(filename)
+        df = pd.read_csv(filename, usecols=selector_rows)
     except FileNotFoundError as err:
         print(f'File {filename} not found: ', err)
 
-    
+    column_index = 0
+    for values in selector_values:
+        if len(values) > 0:
+            data.append(df[df.iloc[:, column_index].isin(values)])
+        column_index += 1
 
     return data
 
 
 
 __name__ == '__main__'
-read_data("dataset_one.csv", [], [])
+data_1 = read_data("dataset_one.csv", ["id", "email", "country"], [[], [], ["United Kingdom", "Netherlands"]])
+data_2 = read_data("dataset_two", ["id", "btc_a", "cc_t"], [data_1[0].id, [], []])
