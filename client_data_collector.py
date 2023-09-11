@@ -6,8 +6,7 @@ def read_data(filename, selector_rows: list, selector_values: list):
     except ValueError as err:
         print(f'The number of selector rows ({len(selector_rows)}) does not match the number of selector values ({len(selector_values)}): ', err)
     
-    data = []
-
+    data = pd.DataFrame(columns=selector_rows)
     if '.csv' not in filename:
         filename = filename + '.csv'
 
@@ -19,7 +18,7 @@ def read_data(filename, selector_rows: list, selector_values: list):
     column_index = 0
     for values in selector_values:
         if len(values) > 0:
-            data.append(df[df.iloc[:, column_index].isin(values)])
+            data = pd.concat([data, df[df.iloc[:, column_index].isin(values)]])
         column_index += 1
 
     return data
@@ -28,4 +27,4 @@ def read_data(filename, selector_rows: list, selector_values: list):
 
 __name__ == '__main__'
 data_1 = read_data("dataset_one.csv", ["id", "email", "country"], [[], [], ["United Kingdom", "Netherlands"]])
-data_2 = read_data("dataset_two", ["id", "btc_a", "cc_t"], [data_1[0].id, [], []])
+data_2 = read_data("dataset_two", ["id", "btc_a", "cc_t"], [data_1['id'].tolist(), [], []])
