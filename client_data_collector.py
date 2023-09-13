@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import argparse
 
+
 def read_data(filename, selector_columns: list, selector_values: list):
     '''Take the name of a csv file, a list of columns to be selected, and a list with filter values for each selected column, and return the corresponding rows as a Pandas DataFrame.
     
@@ -30,6 +31,7 @@ def read_data(filename, selector_columns: list, selector_values: list):
         column_index += 1
 
     return data
+
 
 def get_params():
     '''Return the user's input parameters as a tuple (file 1, file 2, countries).'''
