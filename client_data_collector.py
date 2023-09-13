@@ -28,7 +28,7 @@ def read_data(filename, selector_rows: list, selector_values: list):
 __name__ == '__main__'
 data_1 = read_data("dataset_one.csv", ["id", "email", "country"], [[], [], ["United Kingdom", "Netherlands"]])
 data_2 = read_data("dataset_two", ["id", "btc_a", "cc_t"], [data_1['id'].tolist(), [], []])
-data_1.rename(columns={'id': 'client_identifier'})
-data_2.rename(columns={'id': 'client_identifier', 'btc_a': 'bitcoin_address', 'cc_t': 'credit_card_type'})
+data_1 = data_1.rename(columns={'id': 'client_identifier'})
+data_2 = data_2.rename(columns={'id': 'client_identifier', 'btc_a': 'bitcoin_address', 'cc_t': 'credit_card_type'})
 df = pd.merge(data_1, data_2, on='client_identifier')
 df.to_csv('results.csv', index=False)
