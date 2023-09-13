@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 def read_data(filename, selector_columns: list, selector_values: list):
     '''Take the name of a csv file, a list of columns to be selected, and a list with filter values for each selected column, and return the corresponding rows as a Pandas DataFrame.
@@ -37,4 +38,7 @@ data_2 = read_data("dataset_two", ["id", "btc_a", "cc_t"], [data_1['id'].tolist(
 data_1 = data_1.rename(columns={'id': 'client_identifier'})
 data_2 = data_2.rename(columns={'id': 'client_identifier', 'btc_a': 'bitcoin_address', 'cc_t': 'credit_card_type'})
 df = pd.merge(data_1, data_2, on='client_identifier')
-df.to_csv('results.csv', index=False)
+
+if not os.path.exists('client_data'):
+    os.mkdir('client_data')
+df.to_csv('client_data/results.csv', index=False)
