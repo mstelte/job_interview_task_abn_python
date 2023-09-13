@@ -1,0 +1,3 @@
+client_data/
+.venv/
+__pycache__/
