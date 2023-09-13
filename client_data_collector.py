@@ -34,7 +34,7 @@ def read_data(filename, selector_columns: list, selector_values: list):
 
 
 def get_params():
-    '''Return the user's input parameters as a tuple (file 1, file 2, countries).'''
+    '''Return the user's input parameters as a tuple (file 1, file 2, countries, path).'''
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-f1',
@@ -72,6 +72,13 @@ def get_params():
 
 
 def write_file(file_1, file_2, countries, path):
+    '''Write the file containing the required data.
+    
+    file_1 -- name of the first file to be read
+    file_2 -- name of the first file to be read
+    countries -- list of the countries to be filtered by
+    path -- path in which the output file will be stored
+    '''
     data_1 = read_data(file_1, ["id", "email", "country"], [[], [], countries])
     data_2 = read_data(file_2, ["id", "btc_a", "cc_t"], [data_1['id'].tolist(), [], []])
     data_1 = data_1.rename(columns={'id': 'client_identifier'})
