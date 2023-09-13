@@ -57,22 +57,36 @@ def get_params():
         type=str,
         help='List of the relevant countries. Country names with multiple names have to be written with underscore instead of space.'
     )
+    parser.add_argument(
+        '-p',
+        '--path',
+        nargs=1,
+        type=str,
+        help='Output path.',
+        default=['']
+    )
+
     args = parser.parse_args()
-
-    countries = [c.replace('_', ' ') for c in args.c]
-    return (args.f1[0], args.f2[0], countries)
-
+    countries = [c.replace('_', ' ') for c in args.countries]
+    return (args.file1[0], args.file2[0], countries, args.path[0])
 
 
-__name__ == '__main__'
-file_1, file_2, countries = get_params()
+def write_file(file_1, file_2, countries, path):
+    data_1 = read_data(file_1, ["id", "email", "country"], [[], [], countries])
+    data_2 = read_data(file_2, ["id", "btc_a", "cc_t"], [data_1['id'].tolist(), [], []])
+    data_1 = data_1.rename(columns={'id': 'client_identifier'})
+    data_2 = data_2.rename(columns={'id': 'client_identifier', 'btc_a': 'bitcoin_address', 'cc_t': 'credit_card_type'})
+    df = pd.merge(data_1, data_2, on='client_identifier')
 
-data_1 = read_data(file_1, ["id", "email", "country"], [[], [], countries])
-data_2 = read_data(file_2, ["id", "btc_a", "cc_t"], [data_1['id'].tolist(), [], []])
-data_1 = data_1.rename(columns={'id': 'client_identifier'})
-data_2 = data_2.rename(columns={'id': 'client_identifier', 'btc_a': 'bitcoin_address', 'cc_t': 'credit_card_type'})
-df = pd.merge(data_1, data_2, on='client_identifier')
+    path += '/client_data'
+    if path[0] == '/':
+        path = path[1:]
 
-if not os.path.exists('client_data'):
-    os.mkdir('client_data')
-df.to_csv('client_data/results.csv', index=False)
+    if not os.path.exists(path):
+        os.mkdir(path)
+    df.to_csv(f'{path}/results.csv', index=False)
+
+
+
+if __name__ == '__main__':
+    write_file(get_params())
