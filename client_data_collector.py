@@ -1,17 +1,23 @@
 import pandas as pd
 
-def read_data(filename, selector_rows: list, selector_values: list):
-    try:
-        len(selector_rows) == len(selector_values)
-    except ValueError as err:
-        print(f'The number of selector rows ({len(selector_rows)}) does not match the number of selector values ({len(selector_values)}): ', err)
+def read_data(filename, selector_columns: list, selector_values: list):
+    '''Take the name of a csv file, a list of columns to be selected, and a list with filter values for each selected column, and return the corresponding rows as a Pandas DataFrame.
     
-    data = pd.DataFrame(columns=selector_rows)
+    filename -- name of the file to be read
+    selector_columns -- list of columns to be read
+    selector_values -- list of filters to be applied on each read column (must be same length as selector_columns)
+    '''
+    try:
+        len(selector_columns) == len(selector_values)
+    except ValueError as err:
+        print(f'The number of selector rows ({len(selector_columns)}) does not match the number of selector values ({len(selector_values)}): ', err)
+    
+    data = pd.DataFrame(columns=selector_columns)
     if '.csv' not in filename:
         filename = filename + '.csv'
 
     try:
-        df = pd.read_csv(filename, usecols=selector_rows)
+        df = pd.read_csv(filename, usecols=selector_columns)
     except FileNotFoundError as err:
         print(f'File {filename} not found: ', err)
 
